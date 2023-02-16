@@ -44,5 +44,3 @@ program
   });
 
 program.parse();
-
-// Try the following:
