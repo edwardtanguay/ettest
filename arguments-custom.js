@@ -8,26 +8,24 @@ program.addHelpText(
 	`
 EXAMPLES
 ==============================
-node arguments-custom-processing add --help
-node arguments-custom-processing add 2
-node arguments-custom-processing add 12 56
-node arguments-custom-processing sum 1 2 3
-node arguments-custom-processing sum silly
+node et001 add --help
+node et001 add 2
+node et001 add 12 56
+node et001 sum 1 2 3
 `
 );
 
 function myParseInt(value, dummyPrevious) {
-  // parseInt takes a string and a radix
-  const parsedValue = parseInt(value, 10);
+  let parsedValue = parseInt(value, 10);
   if (isNaN(parsedValue)) {
-	  config.log('bad number');
+	  parsedValue = 0;
   }
   return parsedValue;
 }
 
-// The previous value passed to the custom processing is used when processing variadic values.
-function mySum(value, total) {
-  return total + myParseInt(value);
+function createNameList(name, names) {
+	names.push(name);
+	return names;
 }
 
 program
@@ -40,16 +38,11 @@ program
 
 program
   .command('sum')
-  .argument('<value...>', 'values to be summed', mySum, 0)
-  .action((total) => {
-    console.log(`sum is ${total}`);
+  .argument('<names...>', 'names separated by spaces', createNameList, [])
+  .action((values) => {
+    console.log(`the names are [${values.join(',')}]`);
   });
 
 program.parse();
 
 // Try the following:
-//    node arguments-custom-processing add --help
-//    node arguments-custom-processing add 2
-//    node arguments-custom-processing add 12 56
-//    node arguments-custom-processing sum 1 2 3
-//    node arguments-custom-processing sum silly
